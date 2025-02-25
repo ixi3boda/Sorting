@@ -1,25 +1,69 @@
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
+using namespace std;
+
+void bubbleSort(int arr[], int size);
+int* generateRandArray(int size);
+void measureRuntime(int size);
+
 int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the
-    // <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+    // seed random number generator to get different random numbers each time
+    srand(time(nullptr));
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code.
-        // We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/>
-        // breakpoint for you, but you can always add more by pressing
-        // <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
+    int testSizes[] = {1000, 10000, 25000, 50000, 100000};
+
+    for (int size : testSizes) {
+        cout << "Testing size: " << size << endl;
+        measureRuntime(size);
+        cout << endl;
     }
 
     return 0;
 }
 
-// TIP See CLion help at <a
-// href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>.
-//  Also, you can try interactive lessons for CLion by selecting
-//  'Help | Learn IDE Features' from the main menu.
+void bubbleSort(int arr[], int size) {
+    bool isSorted;
+    for (int i = 0; i < size - 1; i++) {
+        isSorted = true;
+        for (int j = 0; j < size - 1 - i; j++) {
+            // if value before is greater than after --> swap
+            if (arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+                isSorted = false;
+            }
+        }
+        if (isSorted) break;
+    }
+}
+
+int* generateRandArray(int size) {
+    int* arr = new int[size];
+
+    for (int i = 0; i < size; i++)
+        arr[i] = rand();
+
+    return arr;
+}
+
+void measureRuntime(int size) {
+    clock_t start, end;
+    double cpu_time_used;
+
+    int* arr = generateRandArray(size);
+
+    // Bubble Sort
+    start = clock();
+    bubbleSort(arr, size);
+    end = clock();
+    cpu_time_used = (((double) (end - start)) / CLOCKS_PER_SEC) * 1000;
+    printf("Running time for Bubble Sort  is %f ms\n", cpu_time_used);
+
+    // Test other sorting algorithms...
+
+    delete[] arr;
+}
