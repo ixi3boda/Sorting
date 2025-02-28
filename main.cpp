@@ -2,10 +2,12 @@
 #include <ctime>
 #include <cstdlib>
 
-
 using namespace std;
 
 void bubbleSort(int arr[], int size);
+void selectionSort(int arr[], int size);
+void insertionSort(int arr[], int size);
+
 int* generateRandArray(int size);
 void measureRuntime(int size);
 
@@ -41,6 +43,31 @@ void bubbleSort(int arr[], int size) {
     }
 }
 
+
+void selectionSort(int arr[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        int min = i;
+        for (int j = i + 1; j < size; j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
+            }
+        }
+        swap(arr[i], arr[min]);
+    }
+}
+
+void insertionSort(int arr[], int size) {
+    for (int i = 1; i < size; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
 int* generateRandArray(int size) {
     int* arr = new int[size];
 
@@ -55,15 +82,32 @@ void measureRuntime(int size) {
     double cpu_time_used;
 
     int* arr = generateRandArray(size);
+    int* arrCopy = new int[size];
 
     // Bubble Sort
+    memcpy(arrCopy, arr, size * sizeof(int));
     start = clock();
-    bubbleSort(arr, size);
+    bubbleSort(arrCopy, size);
     end = clock();
     cpu_time_used = (((double) (end - start)) / CLOCKS_PER_SEC) * 1000;
-    printf("Running time for Bubble Sort  is %f ms\n", cpu_time_used);
+    printf("Running time for Bubble Sort is %f ms\n", cpu_time_used);
 
-    // Test other sorting algorithms...
+    // Selection Sort
+    memcpy(arrCopy, arr, size * sizeof(int));
+    start = clock();
+    selectionSort(arrCopy, size);
+    end = clock();
+    cpu_time_used = (((double) (end - start)) / CLOCKS_PER_SEC) * 1000;
+    printf("Running time for Selection Sort is %f ms\n", cpu_time_used);
+
+    // Insertion Sort
+    memcpy(arrCopy, arr, size * sizeof(int));
+    start = clock();
+    insertionSort(arrCopy, size);
+    end = clock();
+    cpu_time_used = (((double) (end - start)) / CLOCKS_PER_SEC) * 1000;
+    printf("Running time for Insertion Sort is %f ms\n", cpu_time_used);
 
     delete[] arr;
+    delete[] arrCopy;
 }
